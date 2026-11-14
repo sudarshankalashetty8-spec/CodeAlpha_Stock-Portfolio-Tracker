@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equity — Stock Portfolio Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="/"><span class="logo-mark">E</span> equity<span class="dot">.</span></a>
+  <div class="nav-right"><span class="demo-tag"><i></i> DEMO MARKET DATA</span><span class="nav-label">PORTFOLIO TRACKER</span></div>
+</header>
+<main class="container">
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="spark">✦</span> YOUR MONEY, IN FOCUS</div>
+      <h1>Build your portfolio.<br><em>Know your numbers.</em></h1>
+      <p>Add the number of shares you own. We'll calculate each holding and your total investment using the sample prices built into this project.</p>
+      <div class="hero-points"><span>✓ Simple calculations</span><span>✓ Downloadable reports</span></div>
+    </div>
+    <div class="hero-graphic">
+      <div class="chart-card">
+        <div class="chart-top"><span>PORTFOLIO OVERVIEW</span><span class="chart-live">● SAMPLE</span></div>
+        <div class="chart-number">$<span>— — —</span></div>
+        <div class="chart-sub">Your total will appear after calculation</div>
+        <svg viewBox="0 0 340 100" role="img" aria-label="Decorative rising chart">
+          <defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#9ce0bd" stop-opacity=".35"/><stop offset="1" stop-color="#9ce0bd" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0 78 C25 75 28 48 55 58 S90 72 112 45 S150 56 175 33 S214 48 238 24 S280 38 300 13 S325 20 340 4 L340 100 L0 100Z" fill="url(#area)"/>
+          <path d="M0 78 C25 75 28 48 55 58 S90 72 112 45 S150 56 175 33 S214 48 238 24 S280 38 300 13 S325 20 340 4" fill="none" stroke="#9ce0bd" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="chart-foot"><span>MANUAL INPUT</span><span>FIXED SAMPLE PRICES</span></div>
+      </div>
+      <div class="floating-chip">↗ <b>Track</b> every share</div>
+    </div>
+  </section>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+
+  <section class="section-title">
+    <div><div class="eyebrow dark">PORTFOLIO BUILDER</div><h2>Enter your holdings</h2><p>Type the quantity you own for each stock. Leave unused stocks at zero.</p></div>
+    <div class="currency-note"><span>USD</span> SAMPLE PRICES</div>
+  </section>
+
+  <form action="/calculate" method="post">
+    <div class="stock-grid">
+      {% for symbol, price in stocks.items() %}
+      <label class="stock-card">
+        <div class="stock-main">
+          <span class="ticker-icon icon-{{ loop.index % 6 }}">{{ symbol[:1] }}</span>
+          <span class="stock-info"><b>{{ symbol }}</b><small>Sample price per share</small></span>
+          <strong class="price">${{ "%.2f"|format(price) }}</strong>
+        </div>
+        <div class="quantity-row">
+          <span>QUANTITY</span>
+          <input type="number" name="{{ symbol }}" min="0" step="1" value="0" aria-label="Quantity of {{ symbol }} shares">
+          <span class="shares">shares</span>
+        </div>
+      </label>
+      {% endfor %}
+    </div>
+    <div class="form-bottom">
+      <div class="form-note"><span class="info">i</span><span>Prices are hardcoded demo values for this assignment, not live stock-market quotes.</span></div>
+      <button class="calculate-btn" type="submit">Calculate my portfolio <span>→</span></button>
+    </div>
+  </form>
+
+  <section class="how">
+    <div class="eyebrow dark">THREE SIMPLE STEPS</div>
+    <div class="steps">
+      <div><span>01</span><b>Enter quantities</b><small>Add how many shares you own.</small></div>
+      <i>→</i>
+      <div><span>02</span><b>Calculate value</b><small>Quantity × sample share price.</small></div>
+      <i>→</i>
+      <div><span>03</span><b>Save your report</b><small>Download CSV or TXT summary.</small></div>
+    </div>
+  </section>
+  <footer><a class="logo" href="/"><span class="logo-mark">E</span> equity<span class="dot">.</span></a><span>Python · Flask · Dictionary · File Handling</span><span>Educational project</span></footer>
+</main>
+</body>
+</html>
